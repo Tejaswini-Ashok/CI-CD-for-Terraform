@@ -15,3 +15,8 @@ variable "name_tag" {
   description = "Name of the EC2 instance"
   default     = "My EC2 Instance"
 }
+variable "tf_state_name" {
+  description = "The name of the Terraform state file"
+  type        = string
+  default     = ""  # You can provide a default value or leave it empty
+}
