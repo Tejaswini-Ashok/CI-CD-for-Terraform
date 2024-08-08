@@ -19,6 +19,10 @@ jobs:
       # Terraform FMT step
       - name: Terraform FMT
         run: terraform fmt -check -recursive
+        
+      - name: Terraform FMT Apply
+        run: terraform fmt -recursive
+        continue-on-error: true  
 
   validate:
     name: Validate Terraform Code
