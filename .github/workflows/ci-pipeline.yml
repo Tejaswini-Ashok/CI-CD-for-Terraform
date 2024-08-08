@@ -1,0 +1,63 @@
+wqname: Terraform Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  fmt:
+    name: Format Terraform Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Terraform FMT step
+      - name: Terraform FMT
+        run: terraform fmt -check -recursive
+
+  validate:
+    name: Validate Terraform Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Terraform Validate step
+      - name: Terraform Validate
+        run: terraform validate
+
+  build:
+    name: Build Terraform Infrastructure
+    runs-on: ubuntu-latest
+    needs: [validate]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+        
+      # Terraform Plan step
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+  deploy:
+    name: Deploy Terraform Infrastructure
+    runs-on: ubuntu-latest
+    needs: [build]
+    environment:
+      name: ${{ secrets.TF_STATE_NAME }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Apply the Terraform plan
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+
