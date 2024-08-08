@@ -7,4 +7,3 @@ output "instance_id" {
   value       = aws_instance.my_vm.id
   description = "Instance ID"
 }
-3. Confi
